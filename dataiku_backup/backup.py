@@ -11,13 +11,25 @@ class dataiku_server(DSSClient):
         self.backends={}
         
     def export_all(self,target_dir=None):
+        export_options={
+                      "exportUploads" : True
+                    , "exportManagedFS": True
+                    , "exportAnalysisModels": True
+                    , "exportSavedModels": True
+                    , "exportManagedFolders": False
+                    , "exportAllInputDatasets" : True
+                    , "exportAllDatasets" : True
+                    , "exportAllInputManagedFolders" : False
+                    , "exportGitRepository" : False
+                    }
+
         exported=[]
         dss_projects = self.list_project_keys()
         for p in dss_projects:
             target=target_dir + p + ".zip"
             print("exporting project=%s to %s" % (p,target))
             project=self.get_project(p)
-            project.export_to_file(target,options={'whatever':True})
+            project.export_to_file(target,options=export_options)#options={'whatever':True}
             print("done")
             exported.append(target)
         print ("all project exported")
@@ -43,7 +55,7 @@ class dropbox_backend(dropbox.Dropbox):
         if (len(token) == 0):
             sys.exit("ERROR: Looks like you didn't add your access token")
         
-        dropbox.Dropbox.__init__(self,token)
+        dropbox.Dropbox.__init__(self,token,timeout=None)
         try:
             self.users_get_current_account()
         except AuthError as err:
