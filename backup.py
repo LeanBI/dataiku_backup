@@ -5,6 +5,7 @@ import dropbox
 from dropbox.files import WriteMode
 from dropbox.exceptions import ApiError, AuthError
     
+    
 class dataiku_server(DSSClient):
     def __init__(self,host,api_key):
         DSSClient.__init__(self, host, api_key)
@@ -92,6 +93,9 @@ if __name__ == "__main__" :
     dpx_token= environ["DPX_TOKEN"]
     target_dir= environ["BACKUP_DIR"] +  hostname + "/"
     server=dataiku_server(host,apiKey)
-    server.backup_to_drobox(dl_dir, target_dir, dpx_token)
+    if dpx_token !="" :
+        server.backup_to_drobox(dl_dir, target_dir, dpx_token)
+    else :
+        server.export_all(dl_dir)
         
     
