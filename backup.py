@@ -90,10 +90,10 @@ if __name__ == "__main__" :
     host = environ["DATAIKU_HOST"] # http://localhost:10000
     hostname = environ["DATAIKU_HOSTNAME"]
     apiKey = environ["DATAIKU_APIKEY"]
-    dpx_token= environ["DPX_TOKEN"]
+    dpx_token= environ.get("DPX_TOKEN",None)
     target_dir= environ["BACKUP_DIR"] +  hostname + "/"
     server=dataiku_server(host,apiKey)
-    if dpx_token !="" :
+    if dpx_token != None :
         server.backup_to_drobox(dl_dir, target_dir, dpx_token)
     else :
         server.export_all(dl_dir)
